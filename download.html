@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Download Nyxon — available for Linux, Windows, and macOS."/>
+<title>Nyxon — Download</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#0a0a0b;--surface:#111113;--card:#16161a;--border:#252529;--border-bright:#3a3a42;--text:#e8e8f0;--muted:#5a5a6e;--green:#00e5a0;--yellow:#f9ca24;--blue:#38b6ff;--orange:#ff6b35;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.012) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(10,10,11,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+  .nav-logo{font-size:20px;font-weight:800;letter-spacing:-0.03em;text-decoration:none;color:var(--text);}
+  .nav-logo span{color:var(--green);}
+  .nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
+  .nav-links a{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+  .nav-links a:hover{color:var(--text);}
+  .nav-cta{padding:8px 20px;border-radius:6px;background:var(--green);color:#000!important;font-weight:700!important;}
+
+  main{position:relative;z-index:1;padding:140px 48px 100px;max-width:960px;margin:0 auto;text-align:center;}
+
+  .section-tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.3em;color:var(--green);text-transform:uppercase;margin-bottom:16px;}
+  h1{font-size:clamp(36px,6vw,64px);font-weight:800;letter-spacing:-0.04em;line-height:1.1;margin-bottom:16px;}
+  h1 span{color:var(--green);}
+  .sub{font-family:'Space Mono',monospace;font-size:13px;color:var(--muted);line-height:1.8;max-width:500px;margin:0 auto 64px;}
+
+  .version-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:100px;padding:6px 16px;font-family:'Space Mono',monospace;font-size:11px;color:var(--green);letter-spacing:0.1em;margin-bottom:24px;}
+
+  .download-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:64px;}
+
+  .download-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:left;transition:border-color 0.2s,transform 0.2s;position:relative;overflow:hidden;}
+  .download-card:hover{border-color:var(--border-bright);transform:translateY(-3px);}
+  .download-card.linux{border-top:2px solid var(--green);}
+  .download-card.windows{border-top:2px solid var(--blue);}
+  .download-card.mac{border-top:2px solid var(--muted);}
+
+  .platform-icon{font-size:36px;margin-bottom:16px;display:block;}
+  .platform-name{font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:6px;}
+  .platform-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:24px;line-height:1.6;}
+
+  .download-btn{display:block;width:100%;padding:12px;border-radius:8px;text-align:center;text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.2s;margin-bottom:10px;}
+  .download-btn.primary{background:var(--green);color:#000;}
+  .download-btn.primary:hover{opacity:0.85;}
+  .download-btn.secondary{border:1px solid var(--border);color:var(--muted);}
+  .download-btn.secondary:hover{border-color:var(--border-bright);color:var(--text);}
+  .download-btn.disabled{border:1px solid var(--border);color:var(--muted);opacity:0.5;cursor:not-allowed;pointer-events:none;}
+
+  .platform-note{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-top:8px;}
+
+  .install-steps{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:40px;text-align:left;margin-bottom:48px;}
+  .install-steps h2{font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:24px;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .step{display:flex;gap:16px;}
+  .step-num{width:32px;height:32px;border-radius:8px;background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.2);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--green);flex-shrink:0;}
+  .step-title{font-size:14px;font-weight:700;margin-bottom:6px;}
+  .step-desc{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);line-height:1.7;}
+
+  .sys-req{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;text-align:left;}
+  .sys-req h3{font-size:16px;font-weight:700;margin-bottom:16px;}
+  .req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .req-item{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .req-item strong{color:var(--text);display:block;margin-bottom:4px;}
+
+  footer{border-top:1px solid var(--border);padding:48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;position:relative;z-index:1;}
+  .footer-logo{font-size:18px;font-weight:800;letter-spacing:-0.03em;}
+  .footer-logo span{color:var(--green);}
+  .footer-links{display:flex;gap:24px;}
+  .footer-links a{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+  .footer-links a:hover{color:var(--text);}
+  .footer-copy{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);}
+
+  @media(max-width:768px){nav{padding:16px 24px;}.nav-links{display:none;}main{padding:120px 24px 80px;}.download-grid,.steps,.req-grid{grid-template-columns:1fr;}footer{padding:32px 24px;flex-direction:column;align-items:flex-start;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">NYX<span>ON</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html#features">Features</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="download.html" style="color:var(--text);">Download</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="https://nyxon-server-production.up.railway.app/pro" class="nav-cta">Get Pro</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="version-badge">v1.0.0 — Latest release</div>
+  <div class="section-tag">Download</div>
+  <h1>Available on<br/><span>every platform</span></h1>
+  <p class="sub">Download Nyxon for your operating system. Free to use. No account required.</p>
+
+  <div class="download-grid">
+    <!-- Linux -->
+    <div class="download-card linux">
+      <span class="platform-icon">🐧</span>
+      <div class="platform-name">Linux</div>
+      <div class="platform-sub">Pop!_OS, Ubuntu, Debian<br/>and other distributions</div>
+      <a href="https://github.com/nyxonhello-hue/nyxon-launcher/releases/latest/download/Nyxon-Launcher-1.0.0.AppImage" class="download-btn primary">⬇ Download .AppImage</a>
+      <a href="https://github.com/nyxonhello-hue/nyxon-launcher/releases/latest/download/Nyxon-Launcher-1.0.0.deb" class="download-btn secondary">⬇ Download .deb</a>
+      <div class="platform-note">Recommended: Pop!_OS 22.04+</div>
+    </div>
+
+    <!-- Windows -->
+    <div class="download-card windows">
+      <span class="platform-icon">🪟</span>
+      <div class="platform-name">Windows</div>
+      <div class="platform-sub">Windows 10 and<br/>Windows 11 (64-bit)</div>
+      <a href="https://github.com/nyxonhello-hue/nyxon-launcher/releases/latest/download/Nyxon-Launcher-Setup-1.0.0.exe" class="download-btn primary" style="background:var(--blue);color:#000;">⬇ Download Installer</a>
+      <a href="https://github.com/nyxonhello-hue/nyxon-launcher/releases/latest/download/Nyxon-Launcher-1.0.0.exe" class="download-btn secondary">⬇ Portable .exe</a>
+      <div class="platform-note">No admin rights needed for portable</div>
+    </div>
+
+    <!-- macOS -->
+    <div class="download-card mac">
+      <span class="platform-icon">🍎</span>
+      <div class="platform-name">macOS</div>
+      <div class="platform-sub">macOS 11 Big Sur<br/>and later (Intel + Apple Silicon)</div>
+      <a href="#" class="download-btn disabled">Coming soon</a>
+      <div class="platform-note" style="margin-top:16px;">macOS build coming in v1.1.0</div>
+    </div>
+  </div>
+
+  <!-- Install steps -->
+  <div class="install-steps">
+    <h2>🐧 Getting started on Linux</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Download the .AppImage</div>
+          <div class="step-desc">Click the Download button above to get the latest AppImage file.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Make it executable</div>
+          <div class="step-desc">Right-click → Properties → Permissions → tick "Allow executing as program". Or run:<br/><code style="color:var(--green);">chmod +x Nyxon*.AppImage</code></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Double-click to launch</div>
+          <div class="step-desc">That's it. No installation needed. Nyxon runs directly from the AppImage.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- System requirements -->
+  <div class="sys-req">
+    <h3>System requirements</h3>
+    <div class="req-grid">
+      <div class="req-item">
+        <strong>🐧 Linux</strong>
+        Ubuntu 20.04+ / Pop!_OS 22.04+<br/>64-bit processor<br/>512MB RAM minimum<br/>100MB disk space
+      </div>
+      <div class="req-item">
+        <strong>🪟 Windows</strong>
+        Windows 10 or 11<br/>64-bit processor<br/>512MB RAM minimum<br/>150MB disk space
+      </div>
+      <div class="req-item">
+        <strong>🍎 macOS</strong>
+        macOS 11 Big Sur+<br/>Intel or Apple Silicon<br/>512MB RAM minimum<br/>Coming in v1.1.0
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-logo">NYX<span>ON</span></div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Nyxon. Built in the dark. Ready for the future.</div>
+</footer>
+
+</body>
+</html>

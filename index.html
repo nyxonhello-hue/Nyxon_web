@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Nyxon — Desktop automation launcher. Built in the dark. Ready for the future."/>
+<title>Nyxon — Built in the dark. Ready for the future.</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --surface: #111113;
+    --card: #16161a;
+    --border: #252529;
+    --border-bright: #3a3a42;
+    --text: #e8e8f0;
+    --muted: #5a5a6e;
+    --green: #00e5a0;
+    --purple: #e05aff;
+    --orange: #ff6b35;
+    --blue: #38b6ff;
+    --yellow: #f9ca24;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(10,10,11,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .nav-logo span { color: var(--green); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    padding: 8px 20px;
+    border-radius: 6px;
+    background: var(--green);
+    color: #000 !important;
+    font-weight: 700 !important;
+    transition: opacity 0.2s !important;
+  }
+
+  .nav-cta:hover { opacity: 0.85; color: #000 !important; }
+
+  /* SECTIONS */
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,229,160,0.08);
+    border: 1px solid rgba(0,229,160,0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.1em;
+    margin-bottom: 32px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero h1 {
+    font-size: clamp(48px, 8vw, 88px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 24px;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+
+  .hero h1 span { color: var(--green); }
+
+  .hero-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(12px, 2vw, 15px);
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 560px;
+    margin-bottom: 48px;
+    animation: fadeDown 0.6s 0.2s ease both;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeDown 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    padding: 14px 32px;
+    border-radius: 8px;
+    background: var(--green);
+    color: #000;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+
+  .btn-secondary {
+    padding: 14px 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border-bright);
+    background: transparent;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-secondary:hover { border-color: var(--green); transform: translateY(-2px); }
+
+  /* App preview */
+  .hero-preview {
+    margin-top: 80px;
+    width: 100%;
+    max-width: 900px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .preview-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .preview-dot.red    { background: #ff5f57; }
+  .preview-dot.yellow { background: #febc2e; }
+  .preview-dot.green  { background: #28c840; }
+
+  .preview-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin: 0 auto;
+  }
+
+  .preview-body {
+    padding: 32px;
+  }
+
+  .preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+
+  .preview-logo { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; }
+  .preview-logo span { color: var(--green); }
+
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .preview-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .preview-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .preview-card-icon { font-size: 18px; }
+
+  .preview-card-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    letter-spacing: 0.1em;
+  }
+
+  .preview-card-name { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .preview-card-desc { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); margin-bottom: 12px; }
+
+  .preview-card-btn {
+    width: 100%;
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /* FEATURES */
+  .features {
+    padding: 120px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-title span { color: var(--green); }
+
+  .section-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 560px;
+    margin-bottom: 64px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .feature-card:hover { border-color: var(--border-bright); transform: translateY(-2px); }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .feature-name { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+
+  .feature-desc {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .feature-badge {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .feature-badge.free { background: rgba(0,229,160,0.1); color: var(--green); border: 1px solid rgba(0,229,160,0.2); }
+  .feature-badge.pro  { background: rgba(249,202,36,0.1); color: var(--yellow); border: 1px solid rgba(249,202,36,0.2); }
+
+  /* STATS */
+  .stats {
+    padding: 80px 48px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stats-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--green);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* PRICING */
+  .pricing {
+    padding: 120px 48px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 64px;
+    text-align: left;
+  }
+
+  .pricing-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    position: relative;
+  }
+
+  .pricing-card.pro {
+    border-color: var(--green);
+    box-shadow: 0 0 0 1px var(--green), 0 20px 60px rgba(0,229,160,0.08);
+  }
+
+  .pricing-popular {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--green);
+    color: #000;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 100px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .pricing-tier { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px; }
+  .pricing-price { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 4px; }
+  .pricing-price span { font-size: 18px; color: var(--muted); font-weight: 400; }
+  .pricing-sub { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 28px; }
+
+  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+  .pricing-features li { font-family: 'Space Mono', monospace; font-size: 12px; display: flex; align-items: center; gap: 10px; }
+  .pricing-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+  .pricing-features li.muted::before { content: '✕'; color: var(--muted); }
+  .pricing-features li.muted { color: var(--muted); }
+
+  .pricing-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  .pricing-btn.free-btn { border: 1px solid var(--border-bright); color: var(--text); }
+  .pricing-btn.free-btn:hover { border-color: var(--green); }
+  .pricing-btn.pro-btn  { background: var(--green); color: #000; }
+  .pricing-btn.pro-btn:hover { opacity: 0.85; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-logo { font-size: 18px; font-weight: 800; letter-spacing: -0.03em; }
+  .footer-logo span { color: var(--green); }
+
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--text); }
+
+  .footer-copy { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); }
+
+  /* ANIMATIONS */
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp   { from { opacity: 0; transform: translateY(20px);  } to { opacity: 1; transform: translateY(0); } }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .features, .pricing, .stats { padding: 80px 24px; }
+    .pricing-grid, .stats-inner { grid-template-columns: 1fr; }
+    .preview-grid { grid-template-columns: 1fr 1fr; }
+    footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">NYX<span>ON</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="download.html">Download</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="https://nyxon-server-production.up.railway.app/pro" class="nav-cta">Get Pro</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Now available — v1.0.0</div>
+  <h1>Automate your<br/><span>desktop</span> life</h1>
+  <p class="hero-sub">
+    Nyxon is a cross-platform automation launcher.<br/>
+    11 powerful tools. One click. Built in the dark.
+  </p>
+  <div class="hero-ctas">
+    <a href="download.html" class="btn-primary">⬇ Download Free</a>
+    <a href="#features" class="btn-secondary">See what it does →</a>
+  </div>
+
+  <!-- App preview mockup -->
+  <div class="hero-preview">
+    <div class="preview-bar">
+      <div class="preview-dot red"></div>
+      <div class="preview-dot yellow"></div>
+      <div class="preview-dot green"></div>
+      <div class="preview-title">Nyxon — Automation Launcher</div>
+    </div>
+    <div class="preview-body">
+      <div class="preview-header">
+        <div class="preview-logo">NYX<span>ON</span></div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#5a5a6e;">11 automations ready</div>
+      </div>
+      <div class="preview-grid">
+        <div class="preview-card">
+          <div class="preview-card-top"><span class="preview-card-icon">🗂</span><span class="preview-card-badge">FILE OPS</span></div>
+          <div class="preview-card-name">File Organizer</div>
+          <div class="preview-card-desc">Sort files by extension automatically</div>
+          <div class="preview-card-btn">▶ Launch</div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-top"><span class="preview-card-icon">⚙</span><span class="preview-card-badge">SYSTEM</span></div>
+          <div class="preview-card-name">System Flush</div>
+          <div class="preview-card-desc">Clear cache, temp files, clipboard</div>
+          <div class="preview-card-btn">▶ Launch</div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-top"><span class="preview-card-icon">📡</span><span class="preview-card-badge">NETWORK</span></div>
+          <div class="preview-card-name">Internet Checker</div>
+          <div class="preview-card-desc">Ping hosts, report latency & quality</div>
+          <div class="preview-card-btn">▶ Launch</div>
+        </div>
+        <div class="preview-card" style="border-color:#252529;">
+          <div class="preview-card-top"><span class="preview-card-icon">✏</span><span class="preview-card-badge" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);background:rgba(249,202,36,0.08);">PRO</span></div>
+          <div class="preview-card-name">Bulk Renamer</div>
+          <div class="preview-card-desc">Rename files sequentially in bulk</div>
+          <div class="preview-card-btn" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);">🔒 Pro Feature</div>
+        </div>
+        <div class="preview-card" style="border-color:#252529;">
+          <div class="preview-card-top"><span class="preview-card-icon">🛡</span><span class="preview-card-badge" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);background:rgba(249,202,36,0.08);">PRO</span></div>
+          <div class="preview-card-name">Auto Backup</div>
+          <div class="preview-card-desc">Backup to Drive, local or external</div>
+          <div class="preview-card-btn" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);">🔒 Pro Feature</div>
+        </div>
+        <div class="preview-card" style="border-color:#252529;">
+          <div class="preview-card-top"><span class="preview-card-icon">🌐</span><span class="preview-card-badge" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);background:rgba(249,202,36,0.08);">PRO</span></div>
+          <div class="preview-card-name">Launch Workspace</div>
+          <div class="preview-card-desc">Open saved URL sets in one click</div>
+          <div class="preview-card-btn" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);">🔒 Pro Feature</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="reveal">
+      <div class="stat-val">11</div>
+      <div class="stat-label">Automations</div>
+    </div>
+    <div class="reveal">
+      <div class="stat-val">3</div>
+      <div class="stat-label">Platforms</div>
+    </div>
+    <div class="reveal">
+      <div class="stat-val">1×</div>
+      <div class="stat-label">Payment</div>
+    </div>
+    <div class="reveal">
+      <div class="stat-val" style="color:var(--yellow);">GH₵17</div>
+      <div class="stat-label">Pro price</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-tag">What's inside</div>
+  <h2 class="section-title">Everything you need.<br/><span>Nothing you don't.</span></h2>
+  <p class="section-sub">Nyxon ships with 11 automations across 4 categories. Free tools to get you started, Pro tools to take over your workflow.</p>
+
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <span class="feature-icon">🗂</span>
+      <div class="feature-name">File Organizer</div>
+      <div class="feature-desc">Pick any folder and Nyxon sorts all your files into typed subfolders automatically. Images, docs, videos, code — all in the right place.</div>
+      <span class="feature-badge free">Free</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">⚙</span>
+      <div class="feature-name">System Flush</div>
+      <div class="feature-desc">Clears temp files, browser cache, thumbnails, trash, and clipboard across Windows, macOS, and Linux. Frees real disk space.</div>
+      <span class="feature-badge free">Free</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">📡</span>
+      <div class="feature-name">Internet Checker</div>
+      <div class="feature-desc">Pings 4 hosts, measures real latency, and reports your connection quality — Excellent, Good, Fair, or Poor.</div>
+      <span class="feature-badge free">Free</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">✏</span>
+      <div class="feature-name">Bulk Renamer</div>
+      <div class="feature-desc">Pick a folder and a base name. Nyxon renames every file sequentially: Photo 1, Photo 2, Photo 3… in seconds.</div>
+      <span class="feature-badge pro">Pro</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🛡</span>
+      <div class="feature-name">Auto Backup</div>
+      <div class="feature-desc">Back up any folder to a local drive, external disk, or Google Drive. Scheduled daily backups with dated folder names.</div>
+      <span class="feature-badge pro">Pro</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">✉</span>
+      <div class="feature-name">Daily Digest</div>
+      <div class="feature-desc">Sends a morning system stats notification — CPU, RAM, uptime — so you always know how your machine is doing.</div>
+      <span class="feature-badge pro">Pro</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">⟩_</span>
+      <div class="feature-name">Deploy Script</div>
+      <div class="feature-desc">Pick any Python, Bash, or Node.js script and run it in a real terminal. Perfect for developers who deploy regularly.</div>
+      <span class="feature-badge pro">Pro</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🌐</span>
+      <div class="feature-name">Launch Workspace</div>
+      <div class="feature-desc">Save named sets of URLs — Work, Dev, Personal — and open all of them in one click. Your browser is ready before you are.</div>
+      <span class="feature-badge pro">Pro</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">📊</span>
+      <div class="feature-name">Company Assessment</div>
+      <div class="feature-desc">A full system diagnostic — CPU, RAM, disk, network, security. Generates a score and report. Perfect for IT teams.</div>
+      <span class="feature-badge pro">Pro</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING PREVIEW -->
+<section style="padding:0 48px 120px;max-width:900px;margin:0 auto;text-align:center;">
+  <div class="section-tag">Simple pricing</div>
+  <h2 class="section-title reveal">One price.<br/><span>Full access. Forever.</span></h2>
+  <p class="section-sub reveal" style="margin:0 auto 40px;">No subscriptions. No monthly fees. Pay once, own Nyxon Pro forever — including all future updates.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;" class="reveal">
+    <a href="pricing.html" class="btn-primary">See pricing →</a>
+    <a href="download.html" class="btn-secondary">Download free</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">NYX<span>ON</span></div>
+  <div class="footer-links">
+    <a href="#features">Features</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="download.html">Download</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Nyxon. Built in the dark. Ready for the future.</div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
