@@ -3,545 +3,326 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Nyxon — Desktop automation launcher. Built in the dark. Ready for the future."/>
+<meta name="description" content="Nyxon — Desktop automation launcher. 25 tools. One click. Built in the dark."/>
 <title>Nyxon — Built in the dark. Ready for the future.</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg: #0a0a0b;
-    --surface: #111113;
-    --card: #16161a;
-    --border: #252529;
-    --border-bright: #3a3a42;
-    --text: #e8e8f0;
-    --muted: #5a5a6e;
-    --green: #00e5a0;
-    --purple: #e05aff;
-    --orange: #ff6b35;
-    --blue: #38b6ff;
-    --yellow: #f9ca24;
+  :root{
+    --void:#06050d;
+    --nebula:#110d22;
+    --nebula2:#171130;
+    --border: rgba(246,244,255,0.08);
+    --border-bright: rgba(139,107,240,0.4);
+    --ink:#f6f4ff;
+    --dust: rgba(246,244,255,0.56);
+    --dust2: rgba(246,244,255,0.34);
+    --nyx:#8b6bf0;
+    --nyx-dim: rgba(139,107,240,0.14);
+    --comet:#5fd4d0;
+    --ember:#f5b955;
+    --r:16px;
+  }
+  *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Sora',sans-serif; font-weight:300;
+    background:var(--void); color:var(--ink);
+    overflow-x:hidden; position:relative;
+  }
+  h1,h2,h3,.mono{ font-family:'Space Grotesk',sans-serif; }
+  .mono-label{ font-family:'JetBrains Mono',monospace; }
+
+  ::selection{ background:var(--nyx-dim); }
+
+  a{ color:inherit; }
+
+  /* ── Ambient backdrop ─────────────────────────────────────────── */
+  #bg-canvas{ position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+  .aurora{
+    position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+  }
+  .aurora::before, .aurora::after{
+    content:''; position:absolute; border-radius:50%; filter:blur(90px);
+    opacity:0.35; will-change:transform;
+  }
+  .aurora::before{
+    width:560px; height:560px; top:-160px; left:8%;
+    background:radial-gradient(circle, var(--nyx), transparent 70%);
+    animation: driftA 22s ease-in-out infinite;
+  }
+  .aurora::after{
+    width:480px; height:480px; top:20%; right:4%;
+    background:radial-gradient(circle, var(--comet), transparent 70%);
+    animation: driftB 26s ease-in-out infinite;
+  }
+  @keyframes driftA{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(60px,80px); } }
+  @keyframes driftB{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(-70px,50px); } }
+
+  @media (prefers-reduced-motion: reduce){
+    .aurora::before, .aurora::after{ animation:none; }
   }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  section, nav, footer{ position:relative; z-index:1; }
 
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Syne', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    overflow-x: hidden;
+  /* ── NAV ──────────────────────────────────────────────────────── */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 48px;
+    background:rgba(6,5,13,0.75); backdrop-filter: blur(14px);
+    border-bottom:1px solid var(--border);
   }
+  .nav-logo{ display:flex; align-items:center; gap:9px; text-decoration:none; }
+  .nav-logo svg{ width:24px; height:24px; }
+  .nav-logo span{ font-size:18px; font-weight:600; letter-spacing:-0.01em; color:var(--ink); }
+  .nav-logo .accent{ color:var(--nyx); }
 
-  /* Grid background */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
-    background-size: 48px 48px;
-    pointer-events: none;
-    z-index: 0;
+  .nav-links{ display:flex; align-items:center; gap:36px; list-style:none; }
+  .nav-links a{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--dust); text-decoration:none;
+    transition:color 0.2s; position:relative;
   }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 48px;
-    background: rgba(10,10,11,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+  .nav-links a:not(.nav-cta)::after{
+    content:''; position:absolute; left:0; bottom:-6px; width:0; height:1px;
+    background:var(--nyx); transition:width 0.25s ease;
   }
+  .nav-links a:not(.nav-cta):hover::after{ width:100%; }
+  .nav-links a:hover{ color:var(--ink); }
 
-  .nav-logo {
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    text-decoration: none;
-    color: var(--text);
+  .nav-cta{
+    padding:9px 20px; border-radius:8px;
+    background:linear-gradient(120deg,var(--nyx),#c66bf0);
+    color:#0a0714 !important; font-weight:600 !important;
+    transition:transform 0.2s, box-shadow 0.2s !important;
+    box-shadow:0 0 0 rgba(139,107,240,0);
   }
+  .nav-cta:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(139,107,240,0.35); }
 
-  .nav-logo span { color: var(--green); }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    list-style: none;
+  /* ── HERO ─────────────────────────────────────────────────────── */
+  .hero{
+    min-height:100vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    padding:140px 24px 80px;
   }
-
-  .nav-links a {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.2s;
+  .hero-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--nyx-dim); border:1px solid rgba(139,107,240,0.3);
+    border-radius:100px; padding:6px 16px;
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--nyx);
+    letter-spacing:0.1em; margin-bottom:28px;
+    animation: fadeDown 0.7s ease both;
   }
-
-  .nav-links a:hover { color: var(--text); }
-
-  .nav-cta {
-    padding: 8px 20px;
-    border-radius: 6px;
-    background: var(--green);
-    color: #000 !important;
-    font-weight: 700 !important;
-    transition: opacity 0.2s !important;
-  }
-
-  .nav-cta:hover { opacity: 0.85; color: #000 !important; }
-
-  /* SECTIONS */
-  section {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 120px 24px 80px;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(0,229,160,0.08);
-    border: 1px solid rgba(0,229,160,0.2);
-    border-radius: 100px;
-    padding: 6px 16px;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--green);
-    letter-spacing: 0.1em;
-    margin-bottom: 32px;
-    animation: fadeDown 0.6s ease both;
-  }
-
-  .hero-badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--green);
+  .hero-badge::before{
+    content:''; width:6px; height:6px; border-radius:50%; background:var(--comet);
     animation: pulse 2s infinite;
   }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.25; } }
 
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  .hero h1 {
-    font-size: clamp(48px, 8vw, 88px);
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 1;
-    margin-bottom: 24px;
-    animation: fadeDown 0.6s 0.1s ease both;
+  .hero h1{
+    font-size:clamp(42px,7.5vw,80px); font-weight:600; letter-spacing:-0.03em;
+    line-height:1.05; margin-bottom:22px;
+    animation: fadeDown 0.7s 0.08s ease both;
+  }
+  .hero h1 .grad{
+    background:linear-gradient(120deg,var(--nyx),var(--comet));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
   }
 
-  .hero h1 span { color: var(--green); }
-
-  .hero-sub {
-    font-family: 'Space Mono', monospace;
-    font-size: clamp(12px, 2vw, 15px);
-    color: var(--muted);
-    line-height: 1.8;
-    max-width: 560px;
-    margin-bottom: 48px;
-    animation: fadeDown 0.6s 0.2s ease both;
+  .hero-sub{
+    font-family:'JetBrains Mono',monospace; font-size:clamp(12px,1.8vw,14px);
+    color:var(--dust); line-height:1.9; max-width:560px; margin-bottom:44px;
+    animation: fadeDown 0.7s 0.16s ease both;
   }
 
-  .hero-ctas {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
-    animation: fadeDown 0.6s 0.3s ease both;
+  .hero-ctas{
+    display:flex; gap:16px; flex-wrap:wrap; justify-content:center;
+    animation: fadeDown 0.7s 0.24s ease both;
   }
 
-  .btn-primary {
-    padding: 14px 32px;
-    border-radius: 8px;
-    background: var(--green);
-    color: #000;
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: opacity 0.2s, transform 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+  .btn{
+    padding:14px 30px; border-radius:10px; font-family:'JetBrains Mono',monospace;
+    font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;
+    text-decoration:none; display:inline-flex; align-items:center; gap:9px;
+    transition: transform 0.15s ease; position:relative;
+  }
+  .btn-primary{
+    background:linear-gradient(120deg,var(--nyx),#c66bf0); color:#0a0714;
+    box-shadow:0 0 0 rgba(139,107,240,0);
+  }
+  .btn-primary:hover{ box-shadow:0 10px 30px rgba(139,107,240,0.35); }
+  .btn-secondary{
+    border:1px solid var(--border-bright); background:rgba(255,255,255,0.02); color:var(--ink);
+  }
+  .btn-secondary:hover{ border-color:var(--comet); background:rgba(95,212,208,0.06); }
+
+  /* ── Living terminal preview (signature element) ─────────────── */
+  .hero-preview{
+    margin-top:76px; width:100%; max-width:860px;
+    background:var(--nebula); border:1px solid var(--border); border-radius:var(--r);
+    overflow:hidden; box-shadow:0 50px 100px rgba(0,0,0,0.55);
+    animation: fadeUp 0.9s 0.32s ease both;
+    text-align:left;
+  }
+  .preview-bar{
+    display:flex; align-items:center; gap:8px; padding:13px 18px;
+    background:rgba(255,255,255,0.02); border-bottom:1px solid var(--border);
+  }
+  .preview-dot{ width:9px; height:9px; border-radius:50%; }
+  .preview-dot.red{ background:#ff5f57; } .preview-dot.yellow{ background:#febc2e; } .preview-dot.green{ background:#28c840; }
+  .preview-title{
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--dust2); margin:0 auto;
+  }
+  .preview-body{ padding:26px 24px; min-height:260px; }
+  #term-log{ display:flex; flex-direction:column; gap:7px; }
+  .term-line{
+    font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--dust);
+    opacity:0; transform:translateY(4px); animation: termIn 0.35s ease forwards;
+    display:flex; gap:10px;
+  }
+  .term-line .t{ color:var(--dust2); flex-shrink:0; }
+  .term-line .ok{ color:var(--comet); }
+  .term-line .name{ color:var(--ink); font-weight:500; }
+  @keyframes termIn{ to{ opacity:1; transform:translateY(0); } }
+  .term-cursor{
+    display:inline-block; width:7px; height:14px; background:var(--nyx);
+    animation: blink 1s step-end infinite; vertical-align:middle; margin-left:2px;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* ── Ticker ───────────────────────────────────────────────────── */
+  .ticker-wrap{
+    border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    padding:22px 0; overflow:hidden; white-space:nowrap;
+  }
+  .ticker{ display:inline-flex; animation: scrollTicker 38s linear infinite; }
+  .ticker-wrap:hover .ticker{ animation-play-state:paused; }
+  @keyframes scrollTicker{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  .ticker span{
+    font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--dust2);
+    padding:0 28px; display:inline-flex; align-items:center; gap:28px;
+  }
+  .ticker span::after{ content:'✦'; color:var(--nyx); font-size:10px; }
+
+  /* ── STATS ────────────────────────────────────────────────────── */
+  .stats{ padding:90px 48px; }
+  .stats-inner{
+    max-width:900px; margin:0 auto; display:grid;
+    grid-template-columns:repeat(4,1fr); gap:32px; text-align:center;
+  }
+  .stat-val{
+    font-family:'Space Grotesk',sans-serif; font-size:46px; font-weight:600;
+    color:var(--nyx); letter-spacing:-0.02em; line-height:1; margin-bottom:8px;
+  }
+  .stat-label{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--dust2);
+    letter-spacing:0.1em; text-transform:uppercase;
   }
 
-  .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
-
-  .btn-secondary {
-    padding: 14px 32px;
-    border-radius: 8px;
-    border: 1px solid var(--border-bright);
-    background: transparent;
-    color: var(--text);
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: border-color 0.2s, transform 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+  /* ── FEATURES ─────────────────────────────────────────────────── */
+  .features{ padding:100px 48px; max-width:1120px; margin:0 auto; }
+  .section-tag{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.28em;
+    color:var(--comet); text-transform:uppercase; margin-bottom:16px;
+  }
+  .section-title{
+    font-size:clamp(30px,4.5vw,48px); font-weight:600; letter-spacing:-0.03em;
+    line-height:1.12; margin-bottom:16px;
+  }
+  .section-title .grad{
+    background:linear-gradient(120deg,var(--nyx),var(--comet));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .section-sub{
+    font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--dust);
+    line-height:1.85; max-width:560px; margin-bottom:56px;
   }
 
-  .btn-secondary:hover { border-color: var(--green); transform: translateY(-2px); }
+  .cat-tabs{ display:flex; gap:8px; margin-bottom:32px; flex-wrap:wrap; }
+  .cat-tab{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.06em;
+    padding:8px 16px; border-radius:100px; border:1px solid var(--border);
+    color:var(--dust); cursor:pointer; transition:all 0.2s; background:transparent;
+  }
+  .cat-tab.active, .cat-tab:hover{ border-color:var(--nyx); color:var(--ink); background:var(--nyx-dim); }
 
-  /* App preview */
-  .hero-preview {
-    margin-top: 80px;
-    width: 100%;
-    max-width: 900px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-    animation: fadeUp 0.8s 0.4s ease both;
+  .features-grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px;
+  }
+  .feature-card{
+    background:var(--nebula); border:1px solid var(--border); border-radius:14px;
+    padding:24px; transition:border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    position:relative; overflow:hidden;
+  }
+  .feature-card::after{
+    content:''; position:absolute; inset:0; border-radius:14px;
+    background:radial-gradient(140px 90px at var(--mx,50%) var(--my,0%), rgba(139,107,240,0.14), transparent 70%);
+    opacity:0; transition:opacity 0.2s ease; pointer-events:none;
+  }
+  .feature-card:hover::after{ opacity:1; }
+  .feature-card:hover{ border-color:var(--border-bright); background:var(--nebula2); transform:translateY(-3px); }
+
+  .feature-icon{ font-size:24px; margin-bottom:14px; display:block; }
+  .feature-name{ font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:600; margin-bottom:7px; }
+  .feature-desc{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--dust); line-height:1.7; }
+  .feature-badge{
+    display:inline-block; margin-top:13px; font-family:'JetBrains Mono',monospace;
+    font-size:9px; padding:3px 9px; border-radius:5px; letter-spacing:0.1em; text-transform:uppercase;
+  }
+  .feature-badge.free{ background:rgba(95,212,208,0.1); color:var(--comet); border:1px solid rgba(95,212,208,0.25); }
+  .feature-badge.pro{ background:rgba(245,185,85,0.1); color:var(--ember); border:1px solid rgba(245,185,85,0.25); }
+
+  /* ── PRICING PREVIEW ──────────────────────────────────────────── */
+  .pricing-teaser{ padding:0 48px 130px; max-width:900px; margin:0 auto; text-align:center; }
+
+  /* ── FOOTER ───────────────────────────────────────────────────── */
+  footer{
+    border-top:1px solid var(--border); padding:44px 48px;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px;
+  }
+  .footer-logo{ display:flex; align-items:center; gap:8px; font-size:16px; font-weight:600; }
+  .footer-logo svg{ width:18px; height:18px; }
+  .footer-links{ display:flex; gap:24px; }
+  .footer-links a{
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--dust);
+    text-decoration:none; transition:color 0.2s;
+  }
+  .footer-links a:hover{ color:var(--ink); }
+  .footer-copy{ font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--dust2); }
+
+  /* ── Animations & utility ─────────────────────────────────────── */
+  @keyframes fadeDown{ from{ opacity:0; transform:translateY(-18px); } to{ opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(22px); } to{ opacity:1; transform:translateY(0); } }
+
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible{ opacity:1; transform:translateY(0); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
   }
 
-  .preview-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 20px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .preview-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .preview-dot.red    { background: #ff5f57; }
-  .preview-dot.yellow { background: #febc2e; }
-  .preview-dot.green  { background: #28c840; }
-
-  .preview-title {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    margin: 0 auto;
-  }
-
-  .preview-body {
-    padding: 32px;
-  }
-
-  .preview-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 32px;
-  }
-
-  .preview-logo { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; }
-  .preview-logo span { color: var(--green); }
-
-  .preview-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  .preview-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-  }
-
-  .preview-card-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-
-  .preview-card-icon { font-size: 18px; }
-
-  .preview-card-badge {
-    font-family: 'Space Mono', monospace;
-    font-size: 8px;
-    padding: 2px 6px;
-    border-radius: 3px;
-    background: rgba(255,255,255,0.05);
-    color: var(--muted);
-    border: 1px solid var(--border);
-    letter-spacing: 0.1em;
-  }
-
-  .preview-card-name { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
-  .preview-card-desc { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); margin-bottom: 12px; }
-
-  .preview-card-btn {
-    width: 100%;
-    padding: 6px;
-    border-radius: 5px;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,0.03);
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    text-align: center;
-    text-transform: uppercase;
-  }
-
-  /* FEATURES */
-  .features {
-    padding: 120px 48px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .section-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    color: var(--green);
-    text-transform: uppercase;
-    margin-bottom: 16px;
-  }
-
-  .section-title {
-    font-size: clamp(32px, 5vw, 52px);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin-bottom: 16px;
-  }
-
-  .section-title span { color: var(--green); }
-
-  .section-sub {
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.8;
-    max-width: 560px;
-    margin-bottom: 64px;
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-  }
-
-  .feature-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-
-  .feature-card:hover { border-color: var(--border-bright); transform: translateY(-2px); }
-
-  .feature-icon {
-    font-size: 28px;
-    margin-bottom: 16px;
-    display: block;
-  }
-
-  .feature-name { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-
-  .feature-desc {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    line-height: 1.7;
-  }
-
-  .feature-badge {
-    display: inline-block;
-    margin-top: 12px;
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .feature-badge.free { background: rgba(0,229,160,0.1); color: var(--green); border: 1px solid rgba(0,229,160,0.2); }
-  .feature-badge.pro  { background: rgba(249,202,36,0.1); color: var(--yellow); border: 1px solid rgba(249,202,36,0.2); }
-
-  /* STATS */
-  .stats {
-    padding: 80px 48px;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .stats-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
-    text-align: center;
-  }
-
-  .stat-val {
-    font-size: 48px;
-    font-weight: 800;
-    color: var(--green);
-    letter-spacing: -0.03em;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-
-  .stat-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  /* PRICING */
-  .pricing {
-    padding: 120px 48px;
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-top: 64px;
-    text-align: left;
-  }
-
-  .pricing-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 36px;
-    position: relative;
-  }
-
-  .pricing-card.pro {
-    border-color: var(--green);
-    box-shadow: 0 0 0 1px var(--green), 0 20px 60px rgba(0,229,160,0.08);
-  }
-
-  .pricing-popular {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--green);
-    color: #000;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 4px 14px;
-    border-radius: 100px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  .pricing-tier { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px; }
-  .pricing-price { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 4px; }
-  .pricing-price span { font-size: 18px; color: var(--muted); font-weight: 400; }
-  .pricing-sub { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 28px; }
-
-  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
-  .pricing-features li { font-family: 'Space Mono', monospace; font-size: 12px; display: flex; align-items: center; gap: 10px; }
-  .pricing-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
-  .pricing-features li.muted::before { content: '✕'; color: var(--muted); }
-  .pricing-features li.muted { color: var(--muted); }
-
-  .pricing-btn {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    text-align: center;
-    text-decoration: none;
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: all 0.2s;
-  }
-
-  .pricing-btn.free-btn { border: 1px solid var(--border-bright); color: var(--text); }
-  .pricing-btn.free-btn:hover { border-color: var(--green); }
-  .pricing-btn.pro-btn  { background: var(--green); color: #000; }
-  .pricing-btn.pro-btn:hover { opacity: 0.85; }
-
-  /* FOOTER */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-
-  .footer-logo { font-size: 18px; font-weight: 800; letter-spacing: -0.03em; }
-  .footer-logo span { color: var(--green); }
-
-  .footer-links { display: flex; gap: 24px; }
-  .footer-links a { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
-  .footer-links a:hover { color: var(--text); }
-
-  .footer-copy { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); }
-
-  /* ANIMATIONS */
-  @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeUp   { from { opacity: 0; transform: translateY(20px);  } to { opacity: 1; transform: translateY(0); } }
-
-  /* Scroll reveal */
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    nav { padding: 16px 24px; }
-    .nav-links { display: none; }
-    .features, .pricing, .stats { padding: 80px 24px; }
-    .pricing-grid, .stats-inner { grid-template-columns: 1fr; }
-    .preview-grid { grid-template-columns: 1fr 1fr; }
-    footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+  @media (max-width:768px){
+    nav{ padding:16px 22px; }
+    .nav-links{ display:none; }
+    .features, .pricing-teaser, .stats{ padding-left:24px; padding-right:24px; }
+    .stats-inner{ grid-template-columns:1fr 1fr; }
+    footer{ padding:32px 24px; flex-direction:column; align-items:flex-start; }
   }
 </style>
 </head>
 <body>
 
+<canvas id="bg-canvas"></canvas>
+<div class="aurora"></div>
+
 <!-- NAV -->
 <nav>
-  <a href="/" class="nav-logo">NYX<span>ON</span></a>
+  <a href="/" class="nav-logo">
+    <svg viewBox="0 0 26 26" fill="none"><path d="M17 3a10 10 0 1 0 6 15 8 8 0 0 1-6-15Z" fill="#8b6bf0"/><circle cx="20" cy="6" r="1.4" fill="#f6f4ff"/></svg>
+    <span>NYX<span class="accent">ON</span></span>
+  </a>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="pricing.html">Pricing</a></li>
@@ -553,188 +334,248 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-badge">Now available — v1.0.0</div>
-  <h1>Automate your<br/><span>desktop</span> life</h1>
+  <div class="hero-badge">Now available — v1.1.0 · 25 automations</div>
+  <h1>Automate your<br/><span class="grad">desktop</span> life</h1>
   <p class="hero-sub">
     Nyxon is a cross-platform automation launcher.<br/>
-    11 powerful tools. One click. Built in the dark.
+    25 tools. One click. Built in the dark.
   </p>
   <div class="hero-ctas">
-    <a href="download.html" class="btn-primary">⬇ Download Free</a>
-    <a href="#features" class="btn-secondary">See what it does →</a>
+    <a href="download.html" class="btn btn-primary" data-magnetic>⬇ Download Free</a>
+    <a href="#features" class="btn btn-secondary" data-magnetic>See what it does →</a>
   </div>
 
-  <!-- App preview mockup -->
   <div class="hero-preview">
     <div class="preview-bar">
-      <div class="preview-dot red"></div>
-      <div class="preview-dot yellow"></div>
-      <div class="preview-dot green"></div>
-      <div class="preview-title">Nyxon — Automation Launcher</div>
+      <div class="preview-dot red"></div><div class="preview-dot yellow"></div><div class="preview-dot green"></div>
+      <div class="preview-title">nyxon — automation launcher</div>
     </div>
     <div class="preview-body">
-      <div class="preview-header">
-        <div class="preview-logo">NYX<span>ON</span></div>
-        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#5a5a6e;">11 automations ready</div>
-      </div>
-      <div class="preview-grid">
-        <div class="preview-card">
-          <div class="preview-card-top"><span class="preview-card-icon">🗂</span><span class="preview-card-badge">FILE OPS</span></div>
-          <div class="preview-card-name">File Organizer</div>
-          <div class="preview-card-desc">Sort files by extension automatically</div>
-          <div class="preview-card-btn">▶ Launch</div>
-        </div>
-        <div class="preview-card">
-          <div class="preview-card-top"><span class="preview-card-icon">⚙</span><span class="preview-card-badge">SYSTEM</span></div>
-          <div class="preview-card-name">System Flush</div>
-          <div class="preview-card-desc">Clear cache, temp files, clipboard</div>
-          <div class="preview-card-btn">▶ Launch</div>
-        </div>
-        <div class="preview-card">
-          <div class="preview-card-top"><span class="preview-card-icon">📡</span><span class="preview-card-badge">NETWORK</span></div>
-          <div class="preview-card-name">Internet Checker</div>
-          <div class="preview-card-desc">Ping hosts, report latency & quality</div>
-          <div class="preview-card-btn">▶ Launch</div>
-        </div>
-        <div class="preview-card" style="border-color:#252529;">
-          <div class="preview-card-top"><span class="preview-card-icon">✏</span><span class="preview-card-badge" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);background:rgba(249,202,36,0.08);">PRO</span></div>
-          <div class="preview-card-name">Bulk Renamer</div>
-          <div class="preview-card-desc">Rename files sequentially in bulk</div>
-          <div class="preview-card-btn" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);">🔒 Pro Feature</div>
-        </div>
-        <div class="preview-card" style="border-color:#252529;">
-          <div class="preview-card-top"><span class="preview-card-icon">🛡</span><span class="preview-card-badge" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);background:rgba(249,202,36,0.08);">PRO</span></div>
-          <div class="preview-card-name">Auto Backup</div>
-          <div class="preview-card-desc">Backup to Drive, local or external</div>
-          <div class="preview-card-btn" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);">🔒 Pro Feature</div>
-        </div>
-        <div class="preview-card" style="border-color:#252529;">
-          <div class="preview-card-top"><span class="preview-card-icon">🌐</span><span class="preview-card-badge" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);background:rgba(249,202,36,0.08);">PRO</span></div>
-          <div class="preview-card-name">Launch Workspace</div>
-          <div class="preview-card-desc">Open saved URL sets in one click</div>
-          <div class="preview-card-btn" style="color:#f9ca24;border-color:rgba(249,202,36,0.3);">🔒 Pro Feature</div>
-        </div>
-      </div>
+      <div id="term-log"></div>
     </div>
   </div>
 </section>
 
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker" id="ticker"></div>
+</div>
+
 <!-- STATS -->
 <div class="stats">
   <div class="stats-inner">
-    <div class="reveal">
-      <div class="stat-val">11</div>
-      <div class="stat-label">Automations</div>
-    </div>
-    <div class="reveal">
-      <div class="stat-val">3</div>
-      <div class="stat-label">Platforms</div>
-    </div>
-    <div class="reveal">
-      <div class="stat-val">1×</div>
-      <div class="stat-label">Payment</div>
-    </div>
-    <div class="reveal">
-      <div class="stat-val" style="color:var(--yellow);">GH₵17</div>
-      <div class="stat-label">Pro price</div>
-    </div>
+    <div class="reveal"><div class="stat-val" data-count="25">0</div><div class="stat-label">Automations</div></div>
+    <div class="reveal"><div class="stat-val" data-count="4">0</div><div class="stat-label">Categories</div></div>
+    <div class="reveal"><div class="stat-val" data-count="3">0</div><div class="stat-label">Platforms</div></div>
+    <div class="reveal"><div class="stat-val" style="color:var(--ember);">GH₵17</div><div class="stat-label">Pro price, once</div></div>
   </div>
 </div>
 
 <!-- FEATURES -->
 <section class="features" id="features">
   <div class="section-tag">What's inside</div>
-  <h2 class="section-title">Everything you need.<br/><span>Nothing you don't.</span></h2>
-  <p class="section-sub">Nyxon ships with 11 automations across 4 categories. Free tools to get you started, Pro tools to take over your workflow.</p>
+  <h2 class="section-title reveal">Everything you need.<br/><span class="grad">Nothing you don't.</span></h2>
+  <p class="section-sub reveal">Nyxon ships with 25 automations across 4 categories. Free tools to get you started, Pro tools to take over your workflow.</p>
 
-  <div class="features-grid">
-    <div class="feature-card reveal">
-      <span class="feature-icon">🗂</span>
-      <div class="feature-name">File Organizer</div>
-      <div class="feature-desc">Pick any folder and Nyxon sorts all your files into typed subfolders automatically. Images, docs, videos, code — all in the right place.</div>
-      <span class="feature-badge free">Free</span>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">⚙</span>
-      <div class="feature-name">System Flush</div>
-      <div class="feature-desc">Clears temp files, browser cache, thumbnails, trash, and clipboard across Windows, macOS, and Linux. Frees real disk space.</div>
-      <span class="feature-badge free">Free</span>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">📡</span>
-      <div class="feature-name">Internet Checker</div>
-      <div class="feature-desc">Pings 4 hosts, measures real latency, and reports your connection quality — Excellent, Good, Fair, or Poor.</div>
-      <span class="feature-badge free">Free</span>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">✏</span>
-      <div class="feature-name">Bulk Renamer</div>
-      <div class="feature-desc">Pick a folder and a base name. Nyxon renames every file sequentially: Photo 1, Photo 2, Photo 3… in seconds.</div>
-      <span class="feature-badge pro">Pro</span>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">🛡</span>
-      <div class="feature-name">Auto Backup</div>
-      <div class="feature-desc">Back up any folder to a local drive, external disk, or Google Drive. Scheduled daily backups with dated folder names.</div>
-      <span class="feature-badge pro">Pro</span>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">✉</span>
-      <div class="feature-name">Daily Digest</div>
-      <div class="feature-desc">Sends a morning system stats notification — CPU, RAM, uptime — so you always know how your machine is doing.</div>
-      <span class="feature-badge pro">Pro</span>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">⟩_</span>
-      <div class="feature-name">Deploy Script</div>
-      <div class="feature-desc">Pick any Python, Bash, or Node.js script and run it in a real terminal. Perfect for developers who deploy regularly.</div>
-      <span class="feature-badge pro">Pro</span>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">🌐</span>
-      <div class="feature-name">Launch Workspace</div>
-      <div class="feature-desc">Save named sets of URLs — Work, Dev, Personal — and open all of them in one click. Your browser is ready before you are.</div>
-      <span class="feature-badge pro">Pro</span>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">📊</span>
-      <div class="feature-name">Company Assessment</div>
-      <div class="feature-desc">A full system diagnostic — CPU, RAM, disk, network, security. Generates a score and report. Perfect for IT teams.</div>
-      <span class="feature-badge pro">Pro</span>
-    </div>
+  <div class="cat-tabs">
+    <button class="cat-tab active" data-cat="all">All</button>
+    <button class="cat-tab" data-cat="File Management">File Management</button>
+    <button class="cat-tab" data-cat="System">System</button>
+    <button class="cat-tab" data-cat="Network & Web">Network &amp; Web</button>
+    <button class="cat-tab" data-cat="Business">Business</button>
   </div>
+
+  <div class="features-grid" id="features-grid"></div>
 </section>
 
-<!-- PRICING PREVIEW -->
-<section style="padding:0 48px 120px;max-width:900px;margin:0 auto;text-align:center;">
+<!-- PRICING TEASER -->
+<section class="pricing-teaser">
   <div class="section-tag">Simple pricing</div>
-  <h2 class="section-title reveal">One price.<br/><span>Full access. Forever.</span></h2>
+  <h2 class="section-title reveal">One price.<br/><span class="grad">Full access. Forever.</span></h2>
   <p class="section-sub reveal" style="margin:0 auto 40px;">No subscriptions. No monthly fees. Pay once, own Nyxon Pro forever — including all future updates.</p>
   <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;" class="reveal">
-    <a href="pricing.html" class="btn-primary">See pricing →</a>
-    <a href="download.html" class="btn-secondary">Download free</a>
+    <a href="pricing.html" class="btn btn-primary" data-magnetic>See pricing →</a>
+    <a href="download.html" class="btn btn-secondary" data-magnetic>Download free</a>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">NYX<span>ON</span></div>
+  <div class="footer-logo">
+    <svg viewBox="0 0 26 26" fill="none"><path d="M17 3a10 10 0 1 0 6 15 8 8 0 0 1-6-15Z" fill="#8b6bf0"/><circle cx="20" cy="6" r="1.4" fill="#f6f4ff"/></svg>
+    NYX<span style="color:var(--nyx);">ON</span>
+  </div>
   <div class="footer-links">
-    <a href="#features">Features</a>
-    <a href="pricing.html">Pricing</a>
-    <a href="download.html">Download</a>
-    <a href="contact.html">Contact</a>
+    <a href="#features">Features</a><a href="pricing.html">Pricing</a><a href="download.html">Download</a><a href="contact.html">Contact</a>
   </div>
   <div class="footer-copy">© 2026 Nyxon. Built in the dark. Ready for the future.</div>
 </footer>
 
 <script>
-// Scroll reveal
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-}, { threshold: 0.1 });
+// ── Starfield backdrop ───────────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let w,h,stars=[];
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = document.body.scrollHeight;
+    const count = Math.floor((w * Math.min(h, window.innerHeight*2)) / 8000);
+    stars = Array.from({length:count}, () => ({
+      x: Math.random()*w, y: Math.random()*Math.min(h, window.innerHeight*2),
+      r: Math.random()*1.1+0.2, phase: Math.random()*Math.PI*2, speed: 0.3+Math.random()*0.7
+    }));
+  }
+  window.addEventListener('resize', resize);
+  resize();
+  function draw(t){
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle = '#f6f4ff';
+    stars.forEach(s => {
+      const tw = reduced ? 0.6 : 0.35 + 0.55*Math.abs(Math.sin(t*0.0005*s.speed + s.phase));
+      ctx.globalAlpha = tw * 0.6;
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+    });
+    if(!reduced) requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
 
+// ── Living terminal hero preview ─────────────────────────────────────────
+const AUTOMATIONS = [
+  'File Organizer','System Flush','Internet Checker','QR Code Generator','Password Generator',
+  'PDF to Image','Image to PDF','File Compressor','Invoice Generator','Web Scraper',
+  'Auto Backup','Duplicate Detector','DNS Cleaner','Expense Tracker','Launch Workspace'
+];
+
+function shuffle(arr){ return [...arr].sort(() => Math.random()-0.5); }
+
+async function runTerminal(){
+  const log = document.getElementById('term-log');
+  const list = shuffle(AUTOMATIONS).slice(0,5);
+  log.innerHTML = '';
+  for (const name of list) {
+    const line = document.createElement('div');
+    line.className = 'term-line';
+    line.innerHTML = `<span class="t">$</span><span>nyxon run</span> <span class="name">${name}</span>`;
+    log.appendChild(line);
+    await new Promise(r => setTimeout(r, 260));
+    await new Promise(r => setTimeout(r, 320));
+    const ok = document.createElement('div');
+    ok.className = 'term-line';
+    ok.innerHTML = `<span class="t">·</span><span class="ok">✓ done</span>`;
+    log.appendChild(ok);
+    await new Promise(r => setTimeout(r, 380));
+  }
+  const done = document.createElement('div');
+  done.className = 'term-line';
+  done.innerHTML = `<span class="t">$</span><span class="term-cursor"></span>`;
+  log.appendChild(done);
+  await new Promise(r => setTimeout(r, 2400));
+  runTerminal();
+}
+runTerminal();
+
+// ── Ticker content ────────────────────────────────────────────────────
+const ticker = document.getElementById('ticker');
+const tickerItems = [...AUTOMATIONS, ...AUTOMATIONS].map(n => `<span>${n}</span>`).join('');
+ticker.innerHTML = tickerItems + tickerItems;
+
+// ── Feature data + category filter ──────────────────────────────────────
+const FEATURES = [
+  { icon:'🗂', name:'File Organizer', cat:'File Management', tier:'free', desc:'Pick any folder and Nyxon sorts all your files into typed subfolders automatically.' },
+  { icon:'✏', name:'Bulk Renamer', cat:'File Management', tier:'pro', desc:'Rename every file in a folder sequentially — Photo 1, Photo 2, Photo 3… in seconds.' },
+  { icon:'🛡', name:'Auto Backup', cat:'File Management', tier:'pro', desc:'Back up any folder to local drive, external disk, or Google Drive on a schedule.' },
+  { icon:'🔍', name:'Duplicate Detector', cat:'File Management', tier:'pro', desc:'Find exact duplicate files using checksums — report only, or clean automatically.' },
+  { icon:'🖼', name:'PDF to Image', cat:'File Management', tier:'pro', desc:'Convert any PDF into high-resolution PNG or JPEG images, one file per page.' },
+  { icon:'📑', name:'Image to PDF', cat:'File Management', tier:'pro', desc:'Combine one or more images into a single clean PDF document.' },
+  { icon:'🗜', name:'File Compressor', cat:'File Management', tier:'pro', desc:'Bundle files or an entire folder into a compressed .zip archive.' },
+  { icon:'✂', name:'File Splitter', cat:'File Management', tier:'pro', desc:'Split a large file into smaller chunks, or rejoin chunks into the original.' },
+  { icon:'⚙', name:'System Flush', cat:'System', tier:'free', desc:'Clears temp files, browser cache, thumbnails, trash, and clipboard.' },
+  { icon:'✉', name:'Daily Digest', cat:'System', tier:'pro', desc:'A morning system stats notification — CPU, RAM, uptime — every day.' },
+  { icon:'⟩_', name:'Deploy Script', cat:'System', tier:'pro', desc:'Pick any Python, Bash, or Node.js script and run it in a real terminal.' },
+  { icon:'🚀', name:'Startup Manager', cat:'System', tier:'free', desc:'View and toggle which apps launch automatically when your machine boots.' },
+  { icon:'📋', name:'Clipboard History', cat:'System', tier:'pro', desc:'A rolling history of everything you copy — searchable, pinnable, one click to reuse.' },
+  { icon:'🗑', name:'App Uninstaller Helper', cat:'System', tier:'pro', desc:'See every installed app with its size and uninstall the ones you don\'t need.' },
+  { icon:'📡', name:'Internet Checker', cat:'Network & Web', tier:'free', desc:'Pings multiple hosts and reports your real connection quality.' },
+  { icon:'🌐', name:'Launch Workspace', cat:'Network & Web', tier:'pro', desc:'Save named sets of URLs — Work, Dev, Personal — and open them all in one click.' },
+  { icon:'🕷', name:'Web Scraper', cat:'Network & Web', tier:'pro', desc:'Scrape any page by CSS selector. Export straight to CSV, JSON, or Excel.' },
+  { icon:'▦', name:'QR Code Generator', cat:'Network & Web', tier:'free', desc:'Turn any URL or text into a scannable QR code image, instantly.' },
+  { icon:'🌐', name:'DNS Cleaner', cat:'Network & Web', tier:'free', desc:'Flush your DNS cache in one click — fixes stale sites and slow lookups.' },
+  { icon:'🔑', name:'Password Generator', cat:'Network & Web', tier:'free', desc:'Generate cryptographically strong, random passwords with full control.' },
+  { icon:'📊', name:'Company Assessment', cat:'Business', tier:'pro', desc:'A full system diagnostic — CPU, RAM, disk, network, security — as a report.' },
+  { icon:'🧾', name:'Invoice Generator', cat:'Business', tier:'pro', desc:'Fill in client and line-item details to generate a clean PDF invoice.' },
+  { icon:'💰', name:'Expense Tracker', cat:'Business', tier:'pro', desc:'Log expenses over time and export them to Excel whenever you need a report.' },
+  { icon:'⭐', name:'Rate Nyxon', cat:'Business', tier:'free', desc:'Rate the app and share feedback directly with the team.' },
+  { icon:'📬', name:'Contact Nyxon', cat:'Business', tier:'free', desc:'Reach the Nyxon team directly for support or partnerships.' },
+];
+
+function renderFeatures(filter){
+  const grid = document.getElementById('features-grid');
+  const items = filter === 'all' ? FEATURES : FEATURES.filter(f => f.cat === filter);
+  grid.innerHTML = items.map(f => `
+    <div class="feature-card reveal visible">
+      <span class="feature-icon">${f.icon}</span>
+      <div class="feature-name">${f.name}</div>
+      <div class="feature-desc">${f.desc}</div>
+      <span class="feature-badge ${f.tier}">${f.tier}</span>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.feature-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+      card.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+    });
+  });
+}
+renderFeatures('all');
+
+document.querySelectorAll('.cat-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderFeatures(tab.dataset.cat);
+  });
+});
+
+// ── Scroll reveal ─────────────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── Animated stat counters ────────────────────────────────────────────
+document.querySelectorAll('[data-count]').forEach(el => {
+  const target = parseInt(el.dataset.count);
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        let cur = 0;
+        const step = Math.max(1, Math.ceil(target/30));
+        const timer = setInterval(() => {
+          cur += step;
+          if (cur >= target) { cur = target; clearInterval(timer); }
+          el.textContent = cur;
+        }, 30);
+        statObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  statObserver.observe(el);
+});
+
+// ── Magnetic buttons ───────────────────────────────────────────────────
+document.querySelectorAll('[data-magnetic]').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const r = btn.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width/2) * 0.25;
+    const y = (e.clientY - r.top - r.height/2) * 0.35;
+    btn.style.transform = `translate(${x}px, ${y}px)`;
+  });
+  btn.addEventListener('mouseleave', () => { btn.style.transform = 'translate(0,0)'; });
+});
 </script>
 </body>
 </html>
