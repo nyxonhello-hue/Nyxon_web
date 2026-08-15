@@ -3,7 +3,19 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Nyxon — Desktop automation launcher. 25 tools. One click. Built in the dark."/>
+<meta name="description" content="Nyxon — Desktop automation launcher. 30 tools. One click. Built in the dark."/>
+
+<!-- TODO: replace https://nyxon.app with the real production domain below.
+     og-image.png is included at the project root — just needs the domain fixed. -->
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://nyxon.app/"/>
+<meta property="og:title" content="Nyxon — Built in the dark. Ready for the future."/>
+<meta property="og:description" content="Nyxon — Desktop automation launcher. 30 tools. One click. Built in the dark."/>
+<meta property="og:image" content="https://nyxon.app/og-image.png"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Nyxon — Built in the dark. Ready for the future."/>
+<meta name="twitter:description" content="Nyxon — Desktop automation launcher. 30 tools. One click. Built in the dark."/>
+<meta name="twitter:image" content="https://nyxon.app/og-image.png"/>
 <title>Nyxon — Built in the dark. Ready for the future.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
@@ -328,17 +340,17 @@
     <li><a href="pricing.html">Pricing</a></li>
     <li><a href="download.html">Download</a></li>
     <li><a href="contact.html">Contact</a></li>
-    <li><a href="https://nyxon-server-production.up.railway.app/pro" class="nav-cta">Get Pro</a></li>
+    <li><a href="https://nyxon-server.onrender.com/pro" class="nav-cta">Get Pro</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-badge">Now available — v1.1.0 · 25 automations</div>
+  <div class="hero-badge">Now available — v1.1.2 · 30 automations</div>
   <h1>Automate your<br/><span class="grad">desktop</span> life</h1>
   <p class="hero-sub">
     Nyxon is a cross-platform automation launcher.<br/>
-    25 tools. One click. Built in the dark.
+    30 tools. One click. Built in the dark.
   </p>
   <div class="hero-ctas">
     <a href="download.html" class="btn btn-primary" data-magnetic>⬇ Download Free</a>
@@ -364,7 +376,7 @@
 <!-- STATS -->
 <div class="stats">
   <div class="stats-inner">
-    <div class="reveal"><div class="stat-val" data-count="25">0</div><div class="stat-label">Automations</div></div>
+    <div class="reveal"><div class="stat-val" data-count="30">0</div><div class="stat-label">Automations</div></div>
     <div class="reveal"><div class="stat-val" data-count="4">0</div><div class="stat-label">Categories</div></div>
     <div class="reveal"><div class="stat-val" data-count="3">0</div><div class="stat-label">Platforms</div></div>
     <div class="reveal"><div class="stat-val" style="color:var(--ember);">GH₵17</div><div class="stat-label">Pro price, once</div></div>
@@ -375,7 +387,7 @@
 <section class="features" id="features">
   <div class="section-tag">What's inside</div>
   <h2 class="section-title reveal">Everything you need.<br/><span class="grad">Nothing you don't.</span></h2>
-  <p class="section-sub reveal">Nyxon ships with 25 automations across 4 categories. Free tools to get you started, Pro tools to take over your workflow.</p>
+  <p class="section-sub reveal">Nyxon ships with 30 automations across 4 categories. Free tools to get you started, Pro tools to take over your workflow.</p>
 
   <div class="cat-tabs">
     <button class="cat-tab active" data-cat="all">All</button>
@@ -444,9 +456,12 @@
 
 // ── Living terminal hero preview ─────────────────────────────────────────
 const AUTOMATIONS = [
-  'File Organizer','System Flush','Internet Checker','QR Code Generator','Password Generator',
-  'PDF to Image','Image to PDF','File Compressor','Invoice Generator','Web Scraper',
-  'Auto Backup','Duplicate Detector','DNS Cleaner','Expense Tracker','Launch Workspace'
+  'File Organizer','Bulk Renamer','Auto Backup','Duplicate Detector','PDF to Image',
+  'Image to PDF','File Compressor','File Splitter','System Flush','Daily Digest',
+  'Deploy Script','Startup Manager','Clipboard History','App Uninstaller Helper','Internet Checker',
+  'Launch Workspace','Web Scraper','QR Code Generator','DNS Cleaner','Password Generator',
+  'Company Assessment','Invoice Generator','Expense Tracker','Rate Nyxon','Media Converter',
+  'Video Compressor','PDF Merge','PDF Protect','Image to Text','Large File Finder'
 ];
 
 function shuffle(arr){ return [...arr].sort(() => Math.random()-0.5); }
@@ -509,6 +524,12 @@ const FEATURES = [
   { icon:'💰', name:'Expense Tracker', cat:'Business', tier:'pro', desc:'Log expenses over time and export them to Excel whenever you need a report.' },
   { icon:'⭐', name:'Rate Nyxon', cat:'Business', tier:'free', desc:'Rate the app and share feedback directly with the team.' },
   { icon:'📬', name:'Contact Nyxon', cat:'Business', tier:'free', desc:'Reach the Nyxon team directly for support or partnerships.' },
+  { icon:'🎬', name:'Media Converter', cat:'File Management', tier:'pro', desc:'Convert video and audio files between formats, or extract audio from a video.' },
+  { icon:'📉', name:'Video Compressor', cat:'File Management', tier:'pro', desc:'Shrink a video file\'s size while keeping it watchable — pick your quality/size tradeoff.' },
+  { icon:'🔗', name:'PDF Merge', cat:'File Management', tier:'pro', desc:'Combine two or more PDFs into a single document, in the order you select them.' },
+  { icon:'🔒', name:'PDF Protect', cat:'File Management', tier:'pro', desc:'Stamp a watermark across every page and/or lock a PDF with a password.' },
+  { icon:'📝', name:'Image to Text', cat:'File Management', tier:'pro', desc:'Turn a photo of a handout, textbook page, or whiteboard into editable text — no internet needed.' },
+  { icon:'📦', name:'Large File Finder', cat:'System', tier:'pro', desc:'Scan a folder for the files actually taking up your space — the ones temp cleanup never touches.' },
 ];
 
 function renderFeatures(filter){

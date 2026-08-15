@@ -4,6 +4,18 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="Get in touch with Nyxon — support, licensing, partnerships, and custom automation requests."/>
+
+<!-- TODO: replace https://nyxon.app with the real production domain below.
+     og-image.png is included at the project root — just needs the domain fixed. -->
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://nyxon.app/contact.html"/>
+<meta property="og:title" content="Nyxon — Contact"/>
+<meta property="og:description" content="Get in touch with Nyxon — support, licensing, partnerships, and custom automation requests."/>
+<meta property="og:image" content="https://nyxon.app/og-image.png"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Nyxon — Contact"/>
+<meta name="twitter:description" content="Get in touch with Nyxon — support, licensing, partnerships, and custom automation requests."/>
+<meta name="twitter:image" content="https://nyxon.app/og-image.png"/>
 <title>Nyxon — Contact</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
@@ -118,7 +130,7 @@
     <li><a href="pricing.html">Pricing</a></li>
     <li><a href="download.html">Download</a></li>
     <li><a href="contact.html" style="color:var(--ink);">Contact</a></li>
-    <li><a href="https://nyxon-server-production.up.railway.app/pro" class="nav-cta">Get Pro</a></li>
+    <li><a href="https://nyxon-server.onrender.com/pro" class="nav-cta">Get Pro</a></li>
   </ul>
 </nav>
 
@@ -239,7 +251,7 @@ async function submitContact() {
   btn.textContent = 'Sending…';
 
   try {
-    const res = await fetch('https://nyxon-server-production.up.railway.app/api/inbox', {
+    const res = await fetch('https://nyxon-server.onrender.com/api/inbox', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'contact', name, email, subject, message, timestamp: new Date().toISOString(), source: 'website' })

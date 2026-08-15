@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/pro", "destination": "https://nyxon-server-production.up.railway.app/pro" }
+    { "source": "/pro", "destination": "https://nyxon-server.onrender.com/pro" }
   ],
   "headers": [
     {
