@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Nyxon — Desktop automation launcher. 30 tools. One click. Built in the dark."/>
+<meta name="description" content="Nyxon — Desktop automation launcher. 31 tools. One click. Built in the dark."/>
 
 <!-- TODO: replace https://nyxon.app with the real production domain below.
      og-image.png is included at the project root — just needs the domain fixed. -->
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://nyxon.app/"/>
 <meta property="og:title" content="Nyxon — Built in the dark. Ready for the future."/>
-<meta property="og:description" content="Nyxon — Desktop automation launcher. 30 tools. One click. Built in the dark."/>
+<meta property="og:description" content="Nyxon — Desktop automation launcher. 31 tools. One click. Built in the dark."/>
 <meta property="og:image" content="https://nyxon.app/og-image.png"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Nyxon — Built in the dark. Ready for the future."/>
-<meta name="twitter:description" content="Nyxon — Desktop automation launcher. 30 tools. One click. Built in the dark."/>
+<meta name="twitter:description" content="Nyxon — Desktop automation launcher. 31 tools. One click. Built in the dark."/>
 <meta name="twitter:image" content="https://nyxon.app/og-image.png"/>
 <title>Nyxon — Built in the dark. Ready for the future.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -260,6 +260,24 @@
   }
   .cat-tab.active, .cat-tab:hover{ border-color:var(--nyx); color:var(--ink); background:var(--nyx-dim); }
 
+  /* ── SCREENSHOTS ──────────────────────────────────────────────── */
+  .screenshots{ padding:100px 48px; max-width:1120px; margin:0 auto; }
+  .shot-tabs{ display:flex; gap:8px; margin-bottom:32px; flex-wrap:wrap; }
+  .shot-tab{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.06em;
+    padding:8px 16px; border-radius:100px; border:1px solid var(--border);
+    color:var(--dust); cursor:pointer; transition:all 0.2s; background:transparent;
+  }
+  .shot-tab.active, .shot-tab:hover{ border-color:var(--nyx); color:var(--ink); background:var(--nyx-dim); }
+  .shot-frame{
+    width:100%;
+    background:var(--nebula); border:1px solid var(--border); border-radius:var(--r);
+    overflow:hidden; box-shadow:0 50px 100px rgba(0,0,0,0.55);
+  }
+  .shot-frame img{ width:100%; height:auto; display:block; }
+  .shot-panel{ display:none; }
+  .shot-panel.active{ display:block; }
+
   .features-grid{
     display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px;
   }
@@ -346,11 +364,11 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-badge">Now available — v1.1.2 · 30 automations</div>
+  <div class="hero-badge">Now available — v1.1.2 · 31 automations</div>
   <h1>Automate your<br/><span class="grad">desktop</span> life</h1>
   <p class="hero-sub">
     Nyxon is a cross-platform automation launcher.<br/>
-    30 tools. One click. Built in the dark.
+    31 tools. One click. Built in the dark.
   </p>
   <div class="hero-ctas">
     <a href="download.html" class="btn btn-primary" data-magnetic>⬇ Download Free</a>
@@ -376,18 +394,53 @@
 <!-- STATS -->
 <div class="stats">
   <div class="stats-inner">
-    <div class="reveal"><div class="stat-val" data-count="30">0</div><div class="stat-label">Automations</div></div>
+    <div class="reveal"><div class="stat-val" data-count="31">0</div><div class="stat-label">Automations</div></div>
     <div class="reveal"><div class="stat-val" data-count="4">0</div><div class="stat-label">Categories</div></div>
     <div class="reveal"><div class="stat-val" data-count="3">0</div><div class="stat-label">Platforms</div></div>
     <div class="reveal"><div class="stat-val" style="color:var(--ember);">GH₵17</div><div class="stat-label">Pro price, once</div></div>
   </div>
 </div>
 
+<!-- SCREENSHOTS -->
+<section class="screenshots" id="screenshots">
+  <div class="section-tag">See it in action</div>
+  <h2 class="section-title reveal">The real app.<br/><span class="grad">No mockups.</span></h2>
+  <p class="section-sub reveal">A look inside Nyxon — every category, exactly as it runs on your desktop.</p>
+
+  <div class="shot-tabs">
+    <button class="shot-tab active" data-shot="dashboard">Dashboard</button>
+    <button class="shot-tab" data-shot="file-tools">File Tools</button>
+    <button class="shot-tab" data-shot="system">System</button>
+    <button class="shot-tab" data-shot="network">Network &amp; Web</button>
+    <button class="shot-tab" data-shot="business">Business</button>
+    <button class="shot-tab" data-shot="settings">Settings</button>
+  </div>
+
+  <div class="shot-panel active" data-shot-panel="dashboard">
+    <div class="shot-frame"><img src="screenshots/dashboard.jpg" alt="Nyxon dashboard showing 31 automations across 4 categories" loading="lazy"/></div>
+  </div>
+  <div class="shot-panel" data-shot-panel="file-tools">
+    <div class="shot-frame"><img src="screenshots/file-tools.jpg" alt="Nyxon File Tools category — File Organizer, Bulk Renamer, Auto Backup, Duplicate Detector, and more" loading="lazy"/></div>
+  </div>
+  <div class="shot-panel" data-shot-panel="system">
+    <div class="shot-frame"><img src="screenshots/system.jpg" alt="Nyxon System category — System Flush, Daily Digest, Deploy Script, Startup Manager, and more" loading="lazy"/></div>
+  </div>
+  <div class="shot-panel" data-shot-panel="network">
+    <div class="shot-frame"><img src="screenshots/network.jpg" alt="Nyxon Network and Web category — Internet Checker, Password Generator, Launch Workspace, Web Scraper, and more" loading="lazy"/></div>
+  </div>
+  <div class="shot-panel" data-shot-panel="business">
+    <div class="shot-frame"><img src="screenshots/business.jpg" alt="Nyxon Business category — Company Assessment, Rate Nyxon, Contact Nyxon, Invoice Generator, Expense Tracker" loading="lazy"/></div>
+  </div>
+  <div class="shot-panel" data-shot-panel="settings">
+    <div class="shot-frame"><img src="screenshots/settings.jpg" alt="Nyxon Settings panel — per-automation configuration and notification preferences" loading="lazy"/></div>
+  </div>
+</section>
+
 <!-- FEATURES -->
 <section class="features" id="features">
   <div class="section-tag">What's inside</div>
   <h2 class="section-title reveal">Everything you need.<br/><span class="grad">Nothing you don't.</span></h2>
-  <p class="section-sub reveal">Nyxon ships with 30 automations across 4 categories. Free tools to get you started, Pro tools to take over your workflow.</p>
+  <p class="section-sub reveal">Nyxon ships with 31 automations across 4 categories. Free tools to get you started, Pro tools to take over your workflow.</p>
 
   <div class="cat-tabs">
     <button class="cat-tab active" data-cat="all">All</button>
@@ -460,8 +513,8 @@ const AUTOMATIONS = [
   'Image to PDF','File Compressor','File Splitter','System Flush','Daily Digest',
   'Deploy Script','Startup Manager','Clipboard History','App Uninstaller Helper','Internet Checker',
   'Launch Workspace','Web Scraper','QR Code Generator','DNS Cleaner','Password Generator',
-  'Company Assessment','Invoice Generator','Expense Tracker','Rate Nyxon','Media Converter',
-  'Video Compressor','PDF Merge','PDF Protect','Image to Text','Large File Finder'
+  'Company Assessment','Invoice Generator','Expense Tracker','Rate Nyxon','Contact Nyxon',
+  'Media Converter','Video Compressor','PDF Merge','PDF Protect','Image to Text','Large File Finder'
 ];
 
 function shuffle(arr){ return [...arr].sort(() => Math.random()-0.5); }
@@ -558,6 +611,15 @@ document.querySelectorAll('.cat-tab').forEach(tab => {
     document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     renderFeatures(tab.dataset.cat);
+  });
+});
+
+document.querySelectorAll('.shot-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.shot-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.shot-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.shot-panel[data-shot-panel="${tab.dataset.shot}"]`).classList.add('active');
   });
 });
 
